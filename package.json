@@ -27,6 +27,7 @@
     "prettier": "^3.5.3",
     "reflect-metadata": "^0.2.2",
     "ts-node": "^10.9.2",
+    "type-graphql": "^2.0.0-rc.2",
     "typescript": "^5.8.2"
   }
 }
