@@ -1,5 +1,3 @@
-// project/server/src/entities/Film.ts
-
 import { Field, Int, ObjectType } from 'type-graphql';
 
 @ObjectType()
