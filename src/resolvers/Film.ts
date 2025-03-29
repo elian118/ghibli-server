@@ -37,10 +37,6 @@ export class FilmResolver {
     const nextCursor = result[result.length - 1].id + 1;
     // 다음 커서 유효성 검사
     const hasNext = ghibliData.films.findIndex((f) => f.id === nextCursor) > -1;
-    console.log({
-      cursor: hasNext ? nextCursor : null,
-      films: result,
-    });
     return {
       cursor: hasNext ? nextCursor : null,
       films: result,
@@ -50,5 +46,10 @@ export class FilmResolver {
   @FieldResolver(() => Director, { nullable: true })
   director(@Root() parentFilm: Film): Director | undefined {
     return ghibliData.directors.find((dr) => dr.id === parentFilm.id);
+  }
+
+  @Query(() => Film, { nullable: true })
+  film(@Arg('filmId', () => Int) filmId: number): Film | undefined {
+    return ghibliData.films.find((x) => x.id === filmId);
   }
 }
