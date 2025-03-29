@@ -12,7 +12,6 @@ export class FilmResolver {
 
   @FieldResolver(() => Director, { nullable: true })
   director(@Root() parentFilm: Film): Director | undefined {
-    console.log(ghibliData.directors.find((dr) => dr.id === parentFilm.id));
     return ghibliData.directors.find((dr) => dr.id === parentFilm.id);
   }
 }
