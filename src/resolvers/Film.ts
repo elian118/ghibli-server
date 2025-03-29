@@ -4,7 +4,7 @@ import ghibliData from '../data/ghibli';
 
 @Resolver(Film)
 export class FilmResolver {
-  @Query(() => Film)
+  @Query(() => [Film])
   films(): Film[] {
     return ghibliData.films;
   }
