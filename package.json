@@ -1,0 +1,21 @@
+{
+  "name": "ghibli-server",
+  "version": "1.0.0",
+  "description": "지브리스튜디오 자료 검색 서비스 with Express and GraphQL",
+  "author": "김광회 <postelian@gmail.com> (https://github.com/elian118)",
+  "main": "index.js",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "start": "ts-node src/index.ts"
+  },
+  "dependencies": {
+    "apollo-server-core": "^3.13.0",
+    "apollo-server-express": "^3.13.0",
+    "express": "^4.21.2",
+    "graphql": "^16.10.0",
+    "reflect-metadata": "^0.2.2",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.8.2"
+  }
+}
