@@ -1,3 +1,4 @@
+import * as dotenv from 'dotenv';
 import 'reflect-metadata';
 import { ApolloServer } from 'apollo-server-express';
 import { ApolloServerPluginLandingPageLocalDefault } from 'apollo-server-core';
@@ -6,8 +7,11 @@ import http from 'http';
 import { buildSchema } from 'type-graphql';
 import { FilmResolver } from './resolvers/Film';
 import { CutResolver } from './resolvers/Cut';
+import { createDB } from './db/db-clients';
 
 async function main() {
+  dotenv.config();
+  await createDB();
   const app = express();
 
   const apolloServer = new ApolloServer({
