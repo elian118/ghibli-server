@@ -7,6 +7,6 @@ import { Film } from '../entities/Film';
 export class CutResolver {
   @Query(() => [Cut])
   cuts(@Arg('filmId', () => Int) filmId: Film['id']): Cut[] {
-    return ghibliData.cuts.filter((c: Cut) => c.id === filmId);
+    return ghibliData.cuts.filter((c: Cut) => c.filmId === filmId);
   }
 }
