@@ -5,13 +5,12 @@ import { FilmResolver } from '../resolvers/Film';
 import { CutResolver } from '../resolvers/Cut';
 import { UserResolver } from '../resolvers/User';
 import { ApolloServerPluginLandingPageLocalDefault } from 'apollo-server-core';
-import { verifyAccessTokenFromReqHeaders } from '../utils/jwt-auth';
-import User from '../entities/User';
+import { JwtVerifiedUser, verifyAccessTokenFromReqHeaders } from '../utils/jwt-auth';
 
 export interface MyContext {
   req: Request;
   res: Response;
-  verifiedUser?: User;
+  verifiedUser?: JwtVerifiedUser;
 }
 
 const createApolloServer = async (): Promise<ApolloServer> =>

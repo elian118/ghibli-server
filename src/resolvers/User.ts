@@ -43,7 +43,7 @@ export class UserResolver {
   @Query(() => User, { nullable: true })
   async me(@Ctx() ctx: MyContext): Promise<User | undefined> {
     if (!ctx.verifiedUser) return undefined;
-    return User.findOne({ where: { id: ctx.verifiedUser.id } });
+    return User.findOne({ where: { id: ctx.verifiedUser.userId } });
   }
 
   @Mutation(() => User)
