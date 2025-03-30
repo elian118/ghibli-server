@@ -1,8 +1,10 @@
 import argon2 from 'argon2';
-import { Arg, Field, InputType, Mutation, ObjectType, Resolver } from 'type-graphql';
+import { Arg, Ctx, Field, InputType, Mutation, ObjectType, Query, Resolver, UseMiddleware } from 'type-graphql';
 import { IsEmail, IsString, validate } from 'class-validator';
 import User from '../entities/User';
 import { createAccessToken } from '../utils/jwt-auth';
+import { MyContext } from '../apollo/createApolloServer';
+import { isAuthenticated } from '../middlewares/isAuthenticated';
 
 @InputType()
 export class SignUpInput {
@@ -37,6 +39,7 @@ export class LoginResponse {
 
 @Resolver(User)
 export class UserResolver {
+  @UseMiddleware(isAuthenticated)
   @Mutation(() => User)
   async signUp(@Arg('signUpInput') signUpInput: SignUpInput): Promise<User> {
     const errors = await validate(signUpInput);
@@ -78,5 +81,11 @@ export class UserResolver {
 
     const accessToken = createAccessToken(user);
     return { user, accessToken };
+  }
+
+  @Query(() => User, { nullable: true })
+  async me(@Ctx() ctx: MyContext): Promise<User | undefined> {
+    if (!ctx.verifiedUser) return undefined;
+    return User.findOne({ where: { id: ctx.verifiedUser.id } });
   }
 }
