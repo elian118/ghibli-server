@@ -29,7 +29,9 @@
     "express": "^4.21.2",
     "graphql": "^16.10.0",
     "graphql-scalars": "^1.24.2",
+    "jsonwebtoken": "^9.0.2",
     "mysql2": "^3.14.0",
+    "nanoid": "^5.1.5",
     "prettier": "^3.5.3",
     "reflect-metadata": "^0.2.2",
     "ts-node": "^10.9.2",
@@ -38,6 +40,8 @@
     "typescript": "^5.8.2"
   },
   "devDependencies": {
+    "@types/jsonwebtoken": "^9.0.9",
+    "@types/nanoid": "^3.0.0",
     "nodemon": "^3.1.9"
   }
 }
