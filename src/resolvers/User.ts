@@ -19,13 +19,13 @@ export class LoginInput {
   @Field() @IsString() password: string;
 }
 
-@ObjectType()
+@ObjectType({ description: '필드 에러 타입' })
 export class FieldError {
   @Field() field: string;
   @Field() message: string;
 }
 
-@ObjectType()
+@ObjectType({ description: '로그인 반환 데이터' })
 export class LoginResponse {
   @Field(() => [FieldError], { nullable: true })
   errors?: FieldError[];
@@ -40,6 +40,12 @@ export class LoginResponse {
 @Resolver(User)
 export class UserResolver {
   @UseMiddleware(isAuthenticated)
+  @Query(() => User, { nullable: true })
+  async me(@Ctx() ctx: MyContext): Promise<User | undefined> {
+    if (!ctx.verifiedUser) return undefined;
+    return User.findOne({ where: { id: ctx.verifiedUser.id } });
+  }
+
   @Mutation(() => User)
   async signUp(@Arg('signUpInput') signUpInput: SignUpInput): Promise<User> {
     const errors = await validate(signUpInput);
@@ -81,11 +87,5 @@ export class UserResolver {
 
     const accessToken = createAccessToken(user);
     return { user, accessToken };
-  }
-
-  @Query(() => User, { nullable: true })
-  async me(@Ctx() ctx: MyContext): Promise<User | undefined> {
-    if (!ctx.verifiedUser) return undefined;
-    return User.findOne({ where: { id: ctx.verifiedUser.id } });
   }
 }
