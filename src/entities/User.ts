@@ -1,5 +1,14 @@
 import { Field, Int, ObjectType } from 'type-graphql';
-import { BaseEntity, Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import {
+  BaseEntity,
+  Column,
+  CreateDateColumn,
+  Entity,
+  OneToMany,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
+import { CutVote } from './CutVote';
 
 @ObjectType()
 @Entity()
@@ -26,4 +35,7 @@ export default class User extends BaseEntity {
   @Field(() => String, { description: '수정 일자' })
   @UpdateDateColumn()
   updatedAt: Date;
+
+  @OneToMany(() => CutVote, (cutVote) => cutVote.user)
+  cutVotes: CutVote[];
 }

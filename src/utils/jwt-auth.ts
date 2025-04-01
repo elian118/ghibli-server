@@ -13,7 +13,7 @@ export interface JwtVerifiedUser {
 
 export const createAccessToken = (user: User): string => {
   const userData: JwtVerifiedUser = { userId: user.id };
-  return jwt.sign(userData, process.env.JWT_SECRET_KEY || DEFAULT_JWT_SECRET_KEY, { expiresIn: '10s' });
+  return jwt.sign(userData, process.env.JWT_SECRET_KEY || DEFAULT_JWT_SECRET_KEY, { expiresIn: '10m' });
 };
 
 export const verifyAccessToken = (accessToken?: string): JwtVerifiedUser | null => {
