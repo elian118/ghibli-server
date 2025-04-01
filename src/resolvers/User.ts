@@ -2,7 +2,7 @@ import argon2 from 'argon2';
 import { Arg, Ctx, Field, InputType, Mutation, ObjectType, Query, Resolver, UseMiddleware } from 'type-graphql';
 import { IsEmail, IsString, validate } from 'class-validator';
 import User from '../entities/User';
-import { createAccessToken } from '../utils/jwt-auth';
+import { createAccessToken, createRefreshToken } from '../utils/jwt-auth';
 import { MyContext } from '../apollo/createApolloServer';
 import { isAuthenticated } from '../middlewares/isAuthenticated';
 
@@ -68,7 +68,7 @@ export class UserResolver {
   }
 
   @Mutation(() => LoginResponse)
-  public async login(@Arg('loginInput') loginInput: LoginInput): Promise<LoginResponse> {
+  public async login(@Arg('loginInput') loginInput: LoginInput, @Ctx() { res }: MyContext): Promise<LoginResponse> {
     const { emailOrUsername, password } = loginInput;
 
     const user = await User.findOne({ where: [{ email: emailOrUsername }, { username: emailOrUsername }] });
@@ -85,7 +85,16 @@ export class UserResolver {
       };
     }
 
+    // 엑세스 토큰 발급
     const accessToken = createAccessToken(user);
+    const refreshToken = createRefreshToken(user);
+
+    res.cookie('refreshToken', refreshToken, {
+      httpOnly: true, // 자바스크립트로 접근 불가능하도록 설정
+      secure: process.env.NODE_ENV === 'production', // 프로덕션 환경은 https 프로토콜에서만 작동
+      sameSite: 'lax', // 사이트 내 요청만 허용
+    });
+
     return { user, accessToken };
   }
 }

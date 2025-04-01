@@ -17,8 +17,7 @@ export const createAccessToken = (user: User): string => {
 export const verifyAccessToken = (accessToken?: string): JwtVerifiedUser | null => {
   if (!accessToken) return null;
   try {
-    const verified = jwt.verify(accessToken, process.env.JWT_SECRET_KEY || DEFAULT_JWT_SECRET_KEY) as JwtVerifiedUser;
-    return verified;
+    return jwt.verify(accessToken, process.env.JWT_SECRET_KEY || DEFAULT_JWT_SECRET_KEY) as JwtVerifiedUser;
   } catch (err) {
     console.error(`access token expired: ${err.expiredAt}`);
     throw new AuthenticationError('Access token expired');
@@ -35,4 +34,9 @@ export const verifyAccessTokenFromReqHeaders = (headers: IncomingHttpHeaders): J
   } catch (err) {
     return null;
   }
+};
+
+export const createRefreshToken = (user: User): string => {
+  const userData: JwtVerifiedUser = { userId: user.id };
+  return jwt.sign(userData, process.env.JWT_SECRET_KEY || DEFAULT_JWT_SECRET_KEY, { expiresIn: '14d' });
 };
