@@ -2,6 +2,7 @@ import jwt from 'jsonwebtoken';
 import User from '../entities/User';
 import { AuthenticationError } from 'apollo-server-express';
 import { IncomingHttpHeaders } from 'http';
+import { Response } from 'express';
 
 export const DEFAULT_JWT_SECRET_KEY = 'secret-key';
 
@@ -39,4 +40,12 @@ export const verifyAccessTokenFromReqHeaders = (headers: IncomingHttpHeaders): J
 export const createRefreshToken = (user: User): string => {
   const userData: JwtVerifiedUser = { userId: user.id };
   return jwt.sign(userData, process.env.JWT_SECRET_KEY || DEFAULT_JWT_SECRET_KEY, { expiresIn: '14d' });
+};
+
+export const setRefreshTokenHeader = (res: Response, refreshToken: string): void => {
+  res.cookie('refreshToken', refreshToken, {
+    httpOnly: true, // 자바스크립트로 접근 불가능하도록 설정
+    secure: process.env.NODE_ENV === 'production', // 프로덕션 환경은 https 프로토콜에서만 작동
+    sameSite: 'lax', // 사이트 내 요청만 허용
+  });
 };
