@@ -22,7 +22,7 @@ export const verifyAccessToken = (accessToken?: string): JwtVerifiedUser | null 
     return jwt.verify(accessToken, process.env.JWT_SECRET_KEY || DEFAULT_JWT_SECRET_KEY) as JwtVerifiedUser;
   } catch (err) {
     console.error(`access token expired: ${err.expiredAt}`);
-    throw new AuthenticationError('Access token expired');
+    throw new AuthenticationError('access token expired');
   }
 };
 
