@@ -8,8 +8,8 @@ export const isAuthenticated: MiddlewareFn<MyContext> = async ({ context }, next
   if (!authorization) throw new AuthenticationError('unautenticated');
 
   const accessToken = authorization.split(' ')[1];
-  verifyAccessToken(accessToken);
 
+  verifyAccessToken(accessToken);
   if (!context.verifiedUser) throw new AuthenticationError('unautenticated');
 
   return next();

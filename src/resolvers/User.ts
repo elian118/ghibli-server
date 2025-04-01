@@ -2,12 +2,7 @@ import argon2 from 'argon2';
 import { Arg, Ctx, Field, InputType, Mutation, ObjectType, Query, Resolver, UseMiddleware } from 'type-graphql';
 import { IsEmail, IsString, validate } from 'class-validator';
 import User from '../entities/User';
-import {
-  createAccessToken,
-  createRefreshToken,
-  REFRESH_JWT_SECRET_KET,
-  setRefreshTokenHeader,
-} from '../utils/jwt-auth';
+import { createAccessToken, createRefreshToken, setRefreshTokenHeader } from '../utils/jwt-auth';
 import { MyContext } from '../apollo/createApolloServer';
 import { isAuthenticated } from '../middlewares/isAuthenticated';
 import jwt from 'jsonwebtoken';
@@ -50,6 +45,16 @@ class RefreshAccessTokenResponse {
 
 @Resolver(User)
 export class UserResolver {
+  @UseMiddleware(isAuthenticated)
+  @Mutation(() => Boolean)
+  async logout(@Ctx() { verifiedUser, res, redis }: MyContext): Promise<boolean> {
+    if (verifiedUser) {
+      setRefreshTokenHeader(res, '');
+      await redis.del(String(verifiedUser.userId));
+    }
+    return true;
+  }
+
   @UseMiddleware(isAuthenticated)
   @Query(() => User, { nullable: true })
   async me(@Ctx() ctx: MyContext): Promise<User | undefined> {
@@ -117,7 +122,7 @@ export class UserResolver {
 
     let tokenData: any = null;
     try {
-      tokenData = jwt.verify(refreshToken, REFRESH_JWT_SECRET_KET);
+      tokenData = jwt.verify(refreshToken, process.env.REFRESH_JWT_SECRET_KET);
     } catch (err) {
       console.error(err);
       return null;

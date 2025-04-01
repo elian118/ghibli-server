@@ -40,7 +40,7 @@ export const verifyAccessTokenFromReqHeaders = (headers: IncomingHttpHeaders): J
 
 export const createRefreshToken = (user: User): string => {
   const userData: JwtVerifiedUser = { userId: user.id };
-  return jwt.sign(userData, process.env.JWT_SECRET_KEY || DEFAULT_JWT_SECRET_KEY, { expiresIn: '14d' });
+  return jwt.sign(userData, process.env.REFRESH_JWT_SECRET_KET || REFRESH_JWT_SECRET_KET, { expiresIn: '14d' });
 };
 
 export const setRefreshTokenHeader = (res: Response, refreshToken: string): void => {
